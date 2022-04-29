@@ -10,7 +10,10 @@ export default async function handler(req, res) {
 
     
     const response = await axios.get(`https://pro.openweathermap.org/data/2.5/onecall?lat=${geoip_request.ll[0]}&lon=${geoip_request.ll[1]}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`)
+    const currentCity = await axios.get(`https://pro.openweathermap.org/data/2.5/forecast/daily?lat=${geoip_request.ll[0]}&lon=${geoip_request.ll[1]}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`)
 
-
-    res.status(200).json(response.data)
+    return(res.status(200).send({
+        data: response.data,
+        city: currentCity.data.city.name
+    }));
   }

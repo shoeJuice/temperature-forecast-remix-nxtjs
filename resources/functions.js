@@ -153,4 +153,8 @@ function unixTimeToHumanReadable(seconds)
    }
 
 
+   function getApproximateLocation(){
+       
+   }
+
 export {unixTimeToHumanReadable, numberToDay}

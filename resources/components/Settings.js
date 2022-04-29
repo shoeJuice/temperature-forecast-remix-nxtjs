@@ -9,6 +9,7 @@ import { Flex,
     ModalCloseButton, useDisclosure, Button, Input, Switch, useColorMode, useColorModeValue, useMediaQuery } from '@chakra-ui/react'
 import React from 'react'
 import {FaCog} from 'react-icons/fa'
+
 const Settings = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [value, setValue] = React.useState(props.isDark)

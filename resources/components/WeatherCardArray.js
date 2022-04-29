@@ -46,10 +46,8 @@ const WeatherCardArray = (props) => {
 
     React.useEffect(() => {
         //getTemp()
-        setfList([])
-        initializeList()
-        console.log("flist is:", fList)
-    }, [props.sourceArray])
+       
+    }, [])
 
         
         

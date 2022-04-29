@@ -5,16 +5,16 @@ import {AdaptiveIcon} from './AdaptiveIcon.js'
 
 const WeatherCard = (props) => {
     
-
+    const [weather, setWeather] = React.useState()
     
     React.useEffect(() => {
-        setWeather(props.weatherData)
+        
         console.log('main weather card weather is', weather)
-    }, [props.weatherData])
+    }, [])
 
  
 
-  return loading ? (
+  return props.loading ? (
     <Box>
             <Text fontSize='36px'>
                 Loading...
