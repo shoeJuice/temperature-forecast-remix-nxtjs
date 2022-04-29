@@ -10,7 +10,7 @@ const WeatherCard = (props) => {
     React.useEffect(() => {
         
         console.log('main weather card weather is', weather)
-    }, [])
+    }, [(props.weatherDesc == null)])
 
  
 

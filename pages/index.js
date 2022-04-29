@@ -6,7 +6,7 @@ import axios from 'axios'
 
 import DisplayContainer from '../resources/components/DisplayContainer'
 
-export const getStaticProps = async(context) => {
+export const getStaticProps = async() => {
   const res = await axios.get('/api/getDailyWeather', {baseURL: "http://localhost:3000"})
   const data = res.data.data
   const currentCity = res.data.city
@@ -25,13 +25,13 @@ export const getStaticProps = async(context) => {
 
 export default function Home({data}) {
   return (
-    <>
+    <div className={styles.pageContainer}>
       <Head>
         <title>Forecast</title>
         <meta name="description" content="Get your local weekly forecast!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <DisplayContainer data={data} />
-    </>
+    </div>
   )
 }

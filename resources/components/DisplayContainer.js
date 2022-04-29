@@ -7,6 +7,8 @@ import GreetingCard from './GreetingCard'
 import WeatherCardArray from './WeatherCardArray'
 import {css, keyframes} from '@emotion/css'
 
+import {unixTimeToHumanReadable} from '../../resources/functions'
+
 
 function DisplayContainer(props) {
 
@@ -26,9 +28,9 @@ function DisplayContainer(props) {
   const [mobileLandscape] = useMediaQuery('screen and (max-height: 420px) and (orientation: landscape)')
   const [isSurfaceDuo] = useMediaQuery('only screen and (-webkit-min-device-pixel-ratio: 2.5)')
   const [responseData, setResponseData] = React.useState()
-  const [currentDay, setCurrentDay] = React.useState({"tempDay": 'undef', "tempCurrent": 'undef', "tempMin": 'undef', "weatherDesc": 'undef'})
+  const [currentDay, setCurrentDay] = React.useState(null)
   const [nextSeven, setNextSeven] = React.useState()
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = React.useState()
   const handleName = (value) => {
     localStorage.setItem('userName', value)
     setName(value)
@@ -56,7 +58,21 @@ function DisplayContainer(props) {
     console.log("Current:", props.data.current)
     console.log("Daily:", props.data.daily)
     console.log("City:", props.data.city)
-    }, [])
+
+    let current = props.data.daily
+
+    setCurrentDay({
+      "Description": props.data.current.weather[0].main,
+      "Date": props.data.daily[0].dt,
+      "Temp": {
+        "Current": Number.parseInt(props.data.current.temp),
+        "Max": Number.parseInt(current[0].temp.max),
+        "Min": Number.parseInt(current[0].temp.min)
+      }
+    })
+    console.log("CurrentDay:", currentDay)
+
+    }, [(currentDay == null)])
 
   return (<div className={css`animation: ${fadeIn};
       animation-duration: 3s;
@@ -76,7 +92,8 @@ function DisplayContainer(props) {
             justifyContent='center'
           > 
             <Box>
-              <Settings isDark={props.isDark} onChangeName={(e) => {handleName(e.target.value)}} />
+              <GreetingCard city={props.data.city} />
+              <WeatherCard weatherDesc={((currentDay != null) ? currentDay.Description : "Loading")} tempMax={(currentDay != null? currentDay.Temp.Max : "NaN")} tempCurrent={(currentDay != null ? currentDay.Temp.Current : "NaN")} tempMin={(currentDay != null? currentDay.Temp.Min : "NaN")} />
             </Box> 
           </Flex>)
             : 
