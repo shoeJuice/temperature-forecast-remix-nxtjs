@@ -1,3 +1,13 @@
+
+import {css, keyframes} from '@emotion/css'
+
+
+
+/**
+ * Function to return the time since the Unix Epoch into MM-DD-YYYY format
+ * @param {Number} seconds Seconds since Unix Epoch
+ * @returns        Time in MM-DD-YYYY format
+ */
 function unixTimeToHumanReadable(seconds)
     {
  
@@ -119,6 +129,12 @@ function unixTimeToHumanReadable(seconds)
         return ans;
     }
 
+
+    /** 
+        * Parses date into respective date of the week
+        * @param {number} dtSeconds DateTime in seconds to return date from Unix Epoch
+        * @return {String}          
+       */
    function numberToDay(dtSeconds){
         let milliseconds = dtSeconds * 1000
         let date = unixTimeToHumanReadable(dtSeconds)
@@ -157,4 +173,54 @@ function unixTimeToHumanReadable(seconds)
        
    }
 
-export {unixTimeToHumanReadable, numberToDay}
+   /**
+    * Getter function returning the keyframes needed to render a fadeIn animation 
+    * @returns CSS keyframes outlining the fadeIn effect
+    */
+   function getFadeFrames(){
+       return keyframes`0% {opacity: 0;}
+       25% {opacity: .25;
+             backdrop-filter: blur(4px);}
+       50% {opacity: .50;
+             backdrop-filter: blur(8px);}
+       75% {opacity: .75;
+             backdrop-filter: blur(12px);}
+       100% {opacity: 1;
+             backdrop-filter: blur(16px);}`
+   }
+   
+   /**
+    * Method returning array of weatherObject instances constructed using data passed through props
+    * @param {Object[]} propArray    props needed to initialize weatherObject instances
+    * @returns {weatherObject[]}      Array containing initalized weatherObject instances
+    */
+   function initializeWeatherObjectArray(propArray){
+       //Set up relative import to remove dependency in main file
+       const weatherObjectRef = require('./classes')
+
+       //Construct an empty array
+       const weatherObjectArray = new Array();
+
+       //Check if propArray is an array
+       if(Array.isArray(propArray)){
+           propArray = propArray.slice(1, 7)
+           propArray.map((id, key) => {
+               //Instantiate new weatherObject using corresponding dailyObject attributes
+               let weatherObject = new weatherObjectRef.weatherObject(id.dt, id.temp)
+               //Push weatherObject into weatherObjectArray
+               weatherObjectArray.push(weatherObject)
+           })
+       }
+
+       //Print to the console the array containing the newly instantiated weatherObjects
+       console.log(weatherObjectArray)
+       return weatherObjectArray;
+   }
+
+   function getWeatherObject(date, temp){
+       const weatherObjectRef = require('./classes')
+
+       return new weatherObjectRef.weatherObject(date, temp)
+   }
+
+export {unixTimeToHumanReadable, numberToDay, getFadeFrames, getWeatherObject, initializeWeatherObjectArray}

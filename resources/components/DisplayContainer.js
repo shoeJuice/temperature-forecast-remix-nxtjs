@@ -7,20 +7,14 @@ import GreetingCard from './GreetingCard'
 import WeatherCardArray from './WeatherCardArray'
 import {css, keyframes} from '@emotion/css'
 
-import {unixTimeToHumanReadable} from '../../resources/functions'
+import {unixTimeToHumanReadable, getFadeFrames, numberToDay, getWeatherObject, initializeWeatherObjectArray} from '../../resources/functions'
+
 
 
 function DisplayContainer(props) {
 
-  const fadeIn = keyframes`0% {opacity: 0;}
-  25% {opacity: .25;
-        backdrop-filter: blur(4px);}
-  50% {opacity: .50;
-        backdrop-filter: blur(8px);}
-  75% {opacity: .75;
-        backdrop-filter: blur(12px);}
-  100% {opacity: 1;
-        backdrop-filter: blur(16px);}`
+  const fadeIn = getFadeFrames()
+  
   
   let nameRemembered = ""
   const [name, setName] = React.useState(nameRemembered ? nameRemembered : '')
@@ -36,19 +30,12 @@ function DisplayContainer(props) {
     setName(value)
   }
 
-  
+  const isDailyLoaded = (Array.isArray(props.data.daily))
 
-  const getTemp = () => {
-    axios.get('/api/getDailyWeather')
-   .then(response => {
-       console.log(response)
-       console.log("Main Response Test:", response)
-       let currentTemp = response.data.daily
-       console.log("Current Day:", currentTemp)
-   })
-   
-   
-}
+  let testWeatherObject = getWeatherObject("null", "null")
+
+  
+  
 
   React.useEffect(() => {
      nameRemembered = localStorage.getItem('userName') 
@@ -59,7 +46,7 @@ function DisplayContainer(props) {
     console.log("Daily:", props.data.daily)
     console.log("City:", props.data.city)
 
-    let current = props.data.daily
+    var current = props.data.daily
 
     setCurrentDay({
       "Description": props.data.current.weather[0].main,
@@ -71,8 +58,9 @@ function DisplayContainer(props) {
       }
     })
     console.log("CurrentDay:", currentDay)
-
-    }, [(currentDay == null)])
+    console.log("DailyArray:", (isDailyLoaded ? props.data.daily.slice(1, 8) : props.data.daily))
+    setNextSeven(initializeWeatherObjectArray(props.data.daily))
+    }, [(currentDay == null), (nextSeven == null)])
 
   return (<div className={css`animation: ${fadeIn};
       animation-duration: 3s;
@@ -94,6 +82,7 @@ function DisplayContainer(props) {
             <Box>
               <GreetingCard city={props.data.city} />
               <WeatherCard weatherDesc={((currentDay != null) ? currentDay.Description : "Loading")} tempMax={(currentDay != null? currentDay.Temp.Max : "NaN")} tempCurrent={(currentDay != null ? currentDay.Temp.Current : "NaN")} tempMin={(currentDay != null? currentDay.Temp.Min : "NaN")} />
+              <WeatherCardArray sourceArray={nextSeven} />
             </Box> 
           </Flex>)
             : 

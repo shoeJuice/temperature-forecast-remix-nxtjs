@@ -3,7 +3,9 @@ import {Flex, Box, HStack, Stack, StackDivider, useMediaQuery, Text} from '@chak
 import TestCard from './testCard'
 
 
+
 import { unixTimeToHumanReadable, numberToDay } from '../functions';
+import { weatherObject } from '../classes';
 
     //How to set an array of weathercards
     //Initialize a state variable that holds an array of objects
@@ -17,14 +19,7 @@ const WeatherCardArray = (props) => {
 
     const [temperature, setTemperature] = React.useState();
     const [weather, setWeather] = React.useState();
-    const [fList, setfList] = React.useState([
-        {"temp": {"day": 'undefined',
-                "min": 'undefined'},
-        "weather": [{"main": 'undefined'}],
-        "dt": null
-    }
-
-]);
+    const [fList, setfList] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [isPhoneDisplay] = useMediaQuery('(max-width: 420px)') 
     const [isSurfaceDuo] = useMediaQuery('only screen and (-webkit-min-device-pixel-ratio: 2.5)')
@@ -46,8 +41,9 @@ const WeatherCardArray = (props) => {
 
     React.useEffect(() => {
         //getTemp()
-       
-    }, [])
+        initializeList()
+        console.log(fList)
+    }, [(fList == null)])
 
         
         
@@ -61,9 +57,9 @@ const WeatherCardArray = (props) => {
             
             direction={(isPhoneDisplay) ? 'column' : ( (props.isLandscapeMode) ? 'row' : {base: 'column', sm:'column', md:'row'})}
         >
-            { (Array.isArray(fList)) ? fList.map((id, key) => ((key == 5) ? (<div key={key}><TestCard needsDivider={false} temperature={parseInt(id['temp'].day)} weather={id['weather'][0].main}  min={parseInt(id['temp'].min)} day={numberToDay(id['dt'])} /></div>) : 
+            { (Array.isArray(fList)) ? fList.map((id, key) => ((key == 5) ? (<TestCard key={key} needsDivider={false} temperature={Number.parseInt(id.temp.max)} weather={"Test"}  min={Number.parseInt(id.temp.min)} day={numberToDay(id.date)} />) : 
                 <div key={key}>
-                    <TestCard needsDivider={true} temperature={parseInt(id['temp'].day)} weather={id['weather'][0].main}  min={parseInt(id['temp'].min)} day={numberToDay(id['dt'])} />
+                    <TestCard needsDivider={true} temperature={Number.parseInt(id.temp.max)} weather={"Test"}  min={Number.parseInt(id.temp.min)} day={numberToDay(id.date)} />
                 </div>
             )) : 
                 <Text>
