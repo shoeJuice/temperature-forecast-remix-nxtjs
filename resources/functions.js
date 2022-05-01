@@ -138,7 +138,6 @@ function unixTimeToHumanReadable(seconds)
        */
    function numberToDay(dtSeconds){
         let milliseconds = dtSeconds * 1000
-        let date = unixTimeToHumanReadable(dtSeconds)
         let dateObject = new Date(milliseconds)
         //console.log("Day of week: ", dateObject.getDay())
         let dayOfWeek = ''
