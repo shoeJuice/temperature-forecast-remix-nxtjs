@@ -4,6 +4,16 @@
 
 .pageContainer{
   background-color: darkblue;
+  background: url(https://source.unsplash.com/random/2400x1801/?nature);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.functionalContainer{
+  width: 30%;
 }
 
 .main {

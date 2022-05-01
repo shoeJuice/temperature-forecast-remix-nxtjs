@@ -31,7 +31,9 @@ export default function Home({data}) {
         <meta name="description" content="Get your local weekly forecast!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <DisplayContainer data={data} />
+      <div className={styles.functionalContainer}>
+        <DisplayContainer data={data} />
+      </div>
     </div>
   )
 }

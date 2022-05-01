@@ -4,9 +4,10 @@
  * 
  */
 class weatherObject{
-    constructor(date, temp){
+    constructor(date, temp, weather){
         this.date = date
         this.temp = temp
+        this.weather = weather
     }
 
     

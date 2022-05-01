@@ -57,9 +57,9 @@ const WeatherCardArray = (props) => {
             
             direction={(isPhoneDisplay) ? 'column' : ( (props.isLandscapeMode) ? 'row' : {base: 'column', sm:'column', md:'row'})}
         >
-            { (Array.isArray(fList)) ? fList.map((id, key) => ((key == 5) ? (<TestCard key={key} needsDivider={false} temperature={Number.parseInt(id.temp.max)} weather={"Test"}  min={Number.parseInt(id.temp.min)} day={numberToDay(id.date)} />) : 
+            { (Array.isArray(fList)) ? fList.map((id, key) => ((key == 5) ? (<TestCard key={key} needsDivider={false} temperature={Number.parseInt(id.temp.max)} weather={id.weather.main}  min={Number.parseInt(id.temp.min)} day={numberToDay(id.date)} />) : 
                 <div key={key}>
-                    <TestCard needsDivider={true} temperature={Number.parseInt(id.temp.max)} weather={"Test"}  min={Number.parseInt(id.temp.min)} day={numberToDay(id.date)} />
+                    <TestCard needsDivider={true} temperature={Number.parseInt(id.temp.max)} weather={id.weather.main}  min={Number.parseInt(id.temp.min)} day={numberToDay(id.date)} />
                 </div>
             )) : 
                 <Text>

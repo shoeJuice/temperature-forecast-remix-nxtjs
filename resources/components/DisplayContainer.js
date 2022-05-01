@@ -71,17 +71,17 @@ function DisplayContainer(props) {
             flexDirection="column"
             cursor='default'
             color='white'
-            bgColor='rgba(160, 174, 192, .15)'
+            bgColor='rgba(160, 174, 192, .30)'
             backdropFilter={'auto'}
-            backdropBlur='16px'
-            height='100vh'
-            width='100vw'
+            backdropBlur='6px'
+            padding={10}
+            borderRadius={30}
             alignItems='center'
             justifyContent='center'
           > 
             <Box>
               <GreetingCard city={props.data.city} />
-              <WeatherCard weatherDesc={((currentDay != null) ? currentDay.Description : "Loading")} tempMax={(currentDay != null? currentDay.Temp.Max : "NaN")} tempCurrent={(currentDay != null ? currentDay.Temp.Current : "NaN")} tempMin={(currentDay != null? currentDay.Temp.Min : "NaN")} />
+              <WeatherCard weatherDesc={((currentDay != null) ? currentDay.Description : "Loading")} tempMax={(currentDay != null ? currentDay.Temp.Max : "NaN")} tempCurrent={(currentDay != null ? currentDay.Temp.Current : "NaN")} tempMin={(currentDay != null? currentDay.Temp.Min : "NaN")} />
               <WeatherCardArray sourceArray={nextSeven} />
             </Box> 
           </Flex>)

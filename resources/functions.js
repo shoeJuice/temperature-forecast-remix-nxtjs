@@ -1,12 +1,13 @@
 
 import {css, keyframes} from '@emotion/css'
+import {weatherObject} from './classes'
 
 
 
 /**
  * Function to return the time since the Unix Epoch into MM-DD-YYYY format
  * @param {Number} seconds Seconds since Unix Epoch
- * @returns        Time in MM-DD-YYYY format
+ * @returns {String}       Time in MM-DD-YYYY format
  */
 function unixTimeToHumanReadable(seconds)
     {
@@ -132,14 +133,14 @@ function unixTimeToHumanReadable(seconds)
 
     /** 
         * Parses date into respective date of the week
-        * @param {number} dtSeconds DateTime in seconds to return date from Unix Epoch
-        * @return {String}          
+        * @param {number} dtSeconds Seconds since the Unix Epoch
+        * @return {String}          Substring of the day of the week from UTC
        */
    function numberToDay(dtSeconds){
         let milliseconds = dtSeconds * 1000
         let date = unixTimeToHumanReadable(dtSeconds)
         let dateObject = new Date(milliseconds)
-        console.log("Day of week: ", dateObject.getDay())
+        //console.log("Day of week: ", dateObject.getDay())
         let dayOfWeek = ''
         switch(dateObject.getDay()){
             case 0:
@@ -175,18 +176,25 @@ function unixTimeToHumanReadable(seconds)
 
    /**
     * Getter function returning the keyframes needed to render a fadeIn animation 
-    * @returns CSS keyframes outlining the fadeIn effect
+    * @returns {keyframes} CSS keyframes outlining the fadeIn effect
     */
    function getFadeFrames(){
        return keyframes`0% {opacity: 0;}
        25% {opacity: .25;
-             backdrop-filter: blur(4px);}
+             backdrop-filter: blur(16px);}
        50% {opacity: .50;
-             backdrop-filter: blur(8px);}
-       75% {opacity: .75;
              backdrop-filter: blur(12px);}
+       75% {opacity: .75;
+             backdrop-filter: blur(8px);}
+       85%{
+            opacity: .85;
+            backdrop-filter: blur(4px);}
+        95%{
+            opacity: .95;
+            backdrop-filter: blur(5px);
+        }
        100% {opacity: 1;
-             backdrop-filter: blur(16px);}`
+             backdrop-filter: blur(6px);}`
    }
    
    /**
@@ -195,9 +203,6 @@ function unixTimeToHumanReadable(seconds)
     * @returns {weatherObject[]}      Array containing initalized weatherObject instances
     */
    function initializeWeatherObjectArray(propArray){
-       //Set up relative import to remove dependency in main file
-       const weatherObjectRef = require('./classes')
-
        //Construct an empty array
        const weatherObjectArray = new Array();
 
@@ -206,9 +211,9 @@ function unixTimeToHumanReadable(seconds)
            propArray = propArray.slice(1, 7)
            propArray.map((id, key) => {
                //Instantiate new weatherObject using corresponding dailyObject attributes
-               let weatherObject = new weatherObjectRef.weatherObject(id.dt, id.temp)
+               let tempWeatherObject = new weatherObject(id.dt, id.temp, id.weather[0])
                //Push weatherObject into weatherObjectArray
-               weatherObjectArray.push(weatherObject)
+               weatherObjectArray.push(tempWeatherObject)
            })
        }
 
