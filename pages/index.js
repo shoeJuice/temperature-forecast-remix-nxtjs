@@ -4,9 +4,15 @@ import styles from '../styles/Home.module.css'
 
 import axios from 'axios'
 
+import os from 'os'
+import publicIp from "public-ip"
+
+
 import DisplayContainer from '../resources/components/DisplayContainer'
 
-export const getStaticProps = async() => {
+
+
+export const getServerSideProps = async() => {
   const res = await axios.get('/api/getDailyWeather', {baseURL: `${process.env.BASE_URL}`})
   const data = res.data.data
   const currentCity = res.data.city
@@ -24,7 +30,7 @@ export const getStaticProps = async() => {
 }
 
 export default function Home({data}) {
-  return (
+  return  (
     <div className={styles.pageContainer}>
       <Head>
         <title>Forecast</title>
@@ -32,7 +38,7 @@ export default function Home({data}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.functionalContainer}>
-        <DisplayContainer data={data} />
+        <DisplayContainer data={data ? data : null} />
       </div>
     </div>
   )
