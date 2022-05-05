@@ -168,9 +168,29 @@ function unixTimeToHumanReadable(seconds)
         return dayOfWeek.substring(0, 3)
    }
 
-
+   /**
+    * Array that returns latitude and longitude based on geolocation
+    * 
+    * @returns {{Latitude: Number, Longitude: Number}}   Object containing latitude and longitude as attributes
+    */
    function getApproximateLocation(){
-       
+
+        let gpsObj = new Navigator();
+        gpsObj.geolocation.getCurrentPosition(onSuccess, onError)
+    
+        function onSuccess(){
+            return {
+                Latitude: position.coords.latitude, 
+                Longitude: position.coords.longitude
+            }
+    
+        }
+
+        function onError(){
+            console.log("ERROR")
+        }
+
+        return null;
    }
 
    /**
@@ -227,4 +247,4 @@ function unixTimeToHumanReadable(seconds)
        return new weatherObjectRef.weatherObject(date, temp)
    }
 
-export {unixTimeToHumanReadable, numberToDay, getFadeFrames, getWeatherObject, initializeWeatherObjectArray}
+export {unixTimeToHumanReadable, numberToDay, getFadeFrames, getWeatherObject, initializeWeatherObjectArray, getApproximateLocation}
