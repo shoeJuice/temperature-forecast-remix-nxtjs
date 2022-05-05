@@ -12,7 +12,7 @@ import DisplayContainer from '../resources/components/DisplayContainer'
 
 
 
-export const getServerSideProps = async() => {
+export const getStaticProps = async() => {
   const res = await axios.get('/api/getDailyWeather', {baseURL: `${process.env.BASE_URL}`})
   const data = res.data.data
   const currentCity = res.data.city
