@@ -40,6 +40,10 @@ function DisplayContainer(props) {
   React.useEffect(() => {
      nameRemembered = localStorage.getItem('userName') 
   }, [])
+
+  React.useEffect(() => {
+    
+  }, [props.mobileLandscape])
   
   React.useEffect(() => {
     console.log("Current:", props.data.current)
@@ -62,7 +66,7 @@ function DisplayContainer(props) {
     setNextSeven(initializeWeatherObjectArray(props.data.daily))
     }, [(currentDay == null), (nextSeven == null)])
 
-  return mobileLandscape? (
+  return props.mobileLandscape ? (
   <div className={css`animation: ${fadeIn};
   animation-duration: 3s;
   animation-timing-function: linear;`}>
