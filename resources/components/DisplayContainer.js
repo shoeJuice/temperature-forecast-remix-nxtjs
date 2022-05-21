@@ -61,15 +61,12 @@ function DisplayContainer(props) {
     console.log("Running Hook")
     // window.alert(`Coords Loaded\nLatitude: ${props.latitude}\nLongitude: ${props.longitude}`)
       const initWeather = async() => {
-        if(props.loadLocation){
+        if(props.loadLocation && (coordinates[0] != null && coordinates[1] != null)){
               const weatherCall = await axios.get(`/api/forecast/getForecast?lat=${coordinates[0]}&lon=${coordinates[1]}`,  {baseURL: process.env.NEXT_PUBLIC_BASE_URL}).then((res) => {
-              console.log("New Data Loaded:", res.data)
               const response = res.data.data
               const responseTemp = response.daily[0].temp
-              console.log("Response Temp is", responseTemp)
               const responseCity = res.data.city
-              const responseWeather = response.current.weather[0]
-              console.log(response)
+              const responseWeather = response.current.weather[0]            
               const weatherReference = getWeatherObject(response.current.dt, responseTemp, responseWeather, responseCity);
               setCurrentDay({
                 "Description": weatherReference.weather.main,
@@ -89,7 +86,7 @@ function DisplayContainer(props) {
         
       }
       setTimeout(initWeather, 100);
-    }, [coordinates[0], coordinates[1]])
+    }, [coordinates])
   
 
   
