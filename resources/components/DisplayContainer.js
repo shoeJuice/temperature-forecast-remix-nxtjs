@@ -25,7 +25,7 @@ function DisplayContainer(props) {
   const [city, setCity] = React.useState(props.data.city);
   const [respObj, setRespObj] = React.useState()
   const [isLoading, setLoading] = React.useState(true);
-  const [coordinates, setCoordinates] = React.useState();
+  const [coordinates, setCoordinates] = React.useState([]);
   const handleName = (value) => {
     localStorage.setItem('userName', value)
     setName(value)
@@ -39,7 +39,7 @@ function DisplayContainer(props) {
   let nameRemembered = ""
 
   const initLocation = () => {
-
+    console.log("Execute ILocation")
     navigator.geolocation.getCurrentPosition(onSuccess, onError)
 
     function onSuccess(position){
@@ -49,20 +49,19 @@ function DisplayContainer(props) {
     function onError(err){
       console.log("No Dice")
     }
-
+    return null;
   }
 
   React.useEffect(() => {
-     nameRemembered = localStorage.getItem('userName') 
+     console.log("Loading Coordinates")
+     initLocation()
   }, [])
 
   React.useEffect(() => {
-
+    console.log("Running Hook")
     // window.alert(`Coords Loaded\nLatitude: ${props.latitude}\nLongitude: ${props.longitude}`)
       const initWeather = async() => {
-        if(props.latitude != null && props.longitude != null){
-              setLoading(true);
-              initLocation();
+        if(props.loadLocation){
               const weatherCall = await axios.get(`/api/forecast/getForecast?lat=${coordinates[0]}&lon=${coordinates[1]}`,  {baseURL: process.env.NEXT_PUBLIC_BASE_URL}).then((res) => {
               console.log("New Data Loaded:", res.data)
               const response = res.data.data
@@ -90,7 +89,7 @@ function DisplayContainer(props) {
         
       }
       setTimeout(initWeather, 100);
-    }, [props.latitude, props.longitude])
+    }, [coordinates[0], coordinates[1]])
   
 
   

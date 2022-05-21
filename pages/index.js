@@ -68,7 +68,7 @@ export default function Home({data}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.functionalContainer}>
-        <DisplayContainer mobileLandscape={mQuery} data={data ? data : null} />
+        <DisplayContainer loadLocation mobileLandscape={mQuery} data={data ? data : null} />
       </div>
     </div>
   )
