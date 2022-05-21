@@ -20,7 +20,7 @@ const WeatherCardArray = (props) => {
     const [temperature, setTemperature] = React.useState();
     const [weather, setWeather] = React.useState();
     const [fList, setfList] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = React.useState(props.isLoading);
     const [isPhoneDisplay] = useMediaQuery('(max-width: 420px)') 
     const [isSurfaceDuo] = useMediaQuery('only screen and (-webkit-min-device-pixel-ratio: 2.5)')
     const [mobileLandscape] = useMediaQuery('screen and (max-height: 420px) and (orientation: landscape)')
@@ -36,19 +36,19 @@ const WeatherCardArray = (props) => {
 
     const initializeList = () => {
         setfList(props.sourceArray)
-        setLoading(false)
+        setLoading(props.isLoading)
     }
 
     React.useEffect(() => {
         //getTemp()
         initializeList()
         console.log(fList)
-    }, [(fList == null)])
+    }, [props.sourceArray, props.isLoading])
 
         
         
 
-        return (props.sourceArray) ? (
+        return (props.sourceArray && !loading) ? (
         <Stack
             textAlign='center'
             divider={(isPhoneDisplay || isSurfaceDuo) ? <></> : <></>}
@@ -65,9 +65,10 @@ const WeatherCardArray = (props) => {
                 </Text> }
         </Stack>
         ) :  (
-        <Text>
-            Loading..
-        </Text>);
+            <Text>
+                Loading..
+            </Text>
+            );
 };
 
 export default WeatherCardArray;

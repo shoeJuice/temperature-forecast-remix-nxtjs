@@ -9,6 +9,7 @@ import axios from 'axios'
 import getDailyWeather from './api/forecast/getDailyWeather'
 import DisplayContainer from '../resources/components/DisplayContainer'
 
+
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
 const useMQuery = (qry) => {
@@ -56,12 +57,14 @@ export const getStaticProps = async() => {
 
 export default function Home({data}) {
   const mQuery = useMQuery('screen and (max-height: 420px) and (orientation: landscape)')
+  
+  
   return  (
     <div className={styles.pageContainer}>
       <Head>
         <title>Forecast</title>
         <meta name="description" content="Get your local weekly forecast!" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.functionalContainer}>
