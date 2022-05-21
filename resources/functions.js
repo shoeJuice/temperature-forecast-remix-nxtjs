@@ -241,10 +241,10 @@ function unixTimeToHumanReadable(seconds)
        return weatherObjectArray;
    }
 
-   function getWeatherObject(date, temp){
+   function getWeatherObject(date, temp, weather, city){
        const weatherObjectRef = require('./classes')
 
-       return new weatherObjectRef.weatherObject(date, temp)
+       return new weatherObjectRef.weatherObject(date, temp, weather, city)
    }
 
 export {unixTimeToHumanReadable, numberToDay, getFadeFrames, getWeatherObject, initializeWeatherObjectArray, getApproximateLocation}

@@ -16,6 +16,8 @@ const GreetingCard = (props) => {
   
   let dateFullString = dateObject.toLocaleDateString('en-US', options)
 
+  React.useEffect( () => {console.log("City changed, city is now", props.city)}, [props.city])
+
   return (
         <Box
             textAlign="center"
@@ -27,7 +29,7 @@ const GreetingCard = (props) => {
             <Text marginBottom={[1, 2, 3, 4]} fontSize={fSizeMinor} fontWeight='thin'>Today is {day} </Text>
             <Text
                 fontSize={[16, 22, 32, 35]}
-            >{city}</Text>
+            >{props.city}</Text>
         </Box>
       );
 };

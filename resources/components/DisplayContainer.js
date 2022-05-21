@@ -18,13 +18,14 @@ function DisplayContainer(props) {
   
   
   const [name, setName] = React.useState()
-  const [mQuery] = useMediaQuery('(max-width: 412px)')
   const [mobileLandscape] = useMediaQuery('screen and (max-height: 420px) and (orientation: landscape)')
   const [isSurfaceDuo] = useMediaQuery('only screen and (-webkit-min-device-pixel-ratio: 2.5)')
-  const [responseData, setResponseData] = React.useState()
   const [currentDay, setCurrentDay] = React.useState(null)
   const [nextSeven, setNextSeven] = React.useState()
-  const [loading, setLoading] = React.useState()
+  const [city, setCity] = React.useState(props.data.city);
+  const [respObj, setRespObj] = React.useState()
+  const [isLoading, setLoading] = React.useState(true);
+  const [coordinates, setCoordinates] = React.useState();
   const handleName = (value) => {
     localStorage.setItem('userName', value)
     setName(value)
@@ -37,18 +38,64 @@ function DisplayContainer(props) {
   
   let nameRemembered = ""
 
+  const initLocation = () => {
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError)
+
+    function onSuccess(position){
+      console.log("Coordinates Loaded")
+      setCoordinates([position.coords.latitude, position.coords.longitude])
+    }
+    function onError(err){
+      console.log("No Dice")
+    }
+
+  }
+
   React.useEffect(() => {
      nameRemembered = localStorage.getItem('userName') 
   }, [])
 
   React.useEffect(() => {
-    
-  }, [props.mobileLandscape])
+
+    // window.alert(`Coords Loaded\nLatitude: ${props.latitude}\nLongitude: ${props.longitude}`)
+      const initWeather = async() => {
+        if(props.latitude != null && props.longitude != null){
+              setLoading(true);
+              initLocation();
+              const weatherCall = await axios.get(`/api/forecast/getForecast?lat=${coordinates[0]}&lon=${coordinates[1]}`,  {baseURL: process.env.NEXT_PUBLIC_BASE_URL}).then((res) => {
+              console.log("New Data Loaded:", res.data)
+              const response = res.data.data
+              const responseTemp = response.daily[0].temp
+              console.log("Response Temp is", responseTemp)
+              const responseCity = res.data.city
+              const responseWeather = response.current.weather[0]
+              console.log(response)
+              const weatherReference = getWeatherObject(response.current.dt, responseTemp, responseWeather, responseCity);
+              setCurrentDay({
+                "Description": weatherReference.weather.main,
+                "Date": weatherReference.date,
+                "Temp": {
+                  "Current": weatherReference.tempMid,
+                  "Max": weatherReference.tempMax,
+                  "Min": weatherReference.tempMin
+                }
+              })
+              console.log("RespObj is", weatherReference)
+              setCity(weatherReference.city)
+              setNextSeven(initializeWeatherObjectArray(response.daily.slice(1,8)))
+              setLoading(false)
+          }).catch((err) => (console.log(Error(err.message))))
+      }
+        
+      }
+      setTimeout(initWeather, 100);
+    }, [props.latitude, props.longitude])
+  
+
   
   React.useEffect(() => {
-    console.log("Current:", props.data.current)
-    console.log("Daily:", props.data.daily)
-    console.log("City:", props.data.city)
+    
 
     var current = props.data.daily
 
@@ -62,9 +109,10 @@ function DisplayContainer(props) {
       }
     })
     console.log("CurrentDay:", currentDay)
-    console.log("DailyArray:", (isDailyLoaded ? props.data.daily.slice(1, 8) : props.data.daily))
+    console.log("DailyArray:", (isDailyLoaded ? props.data.daily.slice(1, 8) : []))
     setNextSeven(initializeWeatherObjectArray(props.data.daily))
-    }, [(currentDay == null), (nextSeven == null)])
+    setLoading(false);
+    }, [])
 
   return props.mobileLandscape ? (
   <div className={css`animation: ${fadeIn};
@@ -86,11 +134,11 @@ function DisplayContainer(props) {
         flexDirection='row'
       >
         <Box>
-          <GreetingCard city={props.data.city}/>
+          <GreetingCard city={city ? city : "Loading..."}/>
           <WeatherCard weatherDesc={((currentDay != null) ? currentDay.Description : "Loading")} tempMax={(currentDay != null ? currentDay.Temp.Max : "NaN")} tempCurrent={(currentDay != null ? currentDay.Temp.Current : "NaN")} tempMin={(currentDay != null? currentDay.Temp.Min : "NaN")} />
         </Box>
         <Box marginTop='12ex'>
-          <WeatherCardArray sourceArray={nextSeven} isLandscapeMode={mobileLandscape} />
+          <WeatherCardArray  sourceArray={nextSeven} isLandscapeMode={mobileLandscape} />
         </Box>
       </Flex>
     </Flex>
@@ -113,9 +161,9 @@ function DisplayContainer(props) {
             justifyContent='center'
           > 
             <Box>
-              <GreetingCard city={props.data.city} />
-              <WeatherCard weatherDesc={((currentDay != null) ? currentDay.Description : "Loading")} tempMax={(currentDay != null ? currentDay.Temp.Max : "NaN")} tempCurrent={(currentDay != null ? currentDay.Temp.Current : "NaN")} tempMin={(currentDay != null? currentDay.Temp.Min : "NaN")} />
-              <WeatherCardArray sourceArray={nextSeven} />
+              <GreetingCard city={city ? city : "Loading..."} />
+              <WeatherCard loading={isLoading} weatherDesc={((currentDay != null) ? currentDay.Description : "Loading")} tempMax={(currentDay != null ? currentDay.Temp.Max : "NaN")} tempCurrent={(currentDay != null ? currentDay.Temp.Current : "NaN")} tempMin={(currentDay != null? currentDay.Temp.Min : "NaN")} />
+              <WeatherCardArray isLoading={isLoading} sourceArray={nextSeven} />
             </Box> 
           </Flex>)
             : 

@@ -11,10 +11,11 @@ class weatherObject{
      * @param {Object} temp     Temperature object from API call
      * @param {Object} weather  Wrapper for weather object from API call
      */
-    constructor(date, temp, weather){
+    constructor(date, temp, weather, city){
         this.date = date
         this.temp = temp
         this.weather = weather
+        this.city = city
     }
 
     /**
@@ -47,6 +48,10 @@ class weatherObject{
      */
     get tempMid(){
         return Number.parseInt(this.temp.day)
+    }
+
+    get currentCity(){
+        return this.city
     }
 }
 
