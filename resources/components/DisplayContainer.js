@@ -90,7 +90,7 @@ function DisplayContainer(props) {
         
       }
       setTimeout(initWeather, 100);
-    }, [props.latitude, props.longitude])
+    }, [])
   
 
   
