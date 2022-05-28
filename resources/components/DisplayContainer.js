@@ -79,13 +79,13 @@ function DisplayContainer(props) {
               })
               console.log("RespObj is", weatherReference)
               setCity(weatherReference.city)
-              setNextSeven(initializeWeatherObjectArray(response.daily.slice(1,8)))
+              setNextSeven(initializeWeatherObjectArray(response.daily.slice(0,7)))
               setLoading(false)
           }).catch((err) => (console.log(Error(err.message))))
       }
         
       }
-      setTimeout(initWeather, 100);
+      setTimeout(initWeather, 50);
     }, [coordinates])
   
 
@@ -105,7 +105,7 @@ function DisplayContainer(props) {
       }
     })
     console.log("CurrentDay:", currentDay)
-    console.log("DailyArray:", (isDailyLoaded ? props.data.daily.slice(1, 8) : []))
+    console.log("DailyArray:", (isDailyLoaded ? props.data.daily.slice(0, 7) : []))
     setNextSeven(initializeWeatherObjectArray(props.data.daily))
     setLoading(false);
     }, [])
