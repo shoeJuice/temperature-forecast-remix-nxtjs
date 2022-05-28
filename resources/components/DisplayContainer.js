@@ -25,7 +25,7 @@ function DisplayContainer(props) {
   const [city, setCity] = React.useState(props.data.city);
   const [respObj, setRespObj] = React.useState()
   const [isLoading, setLoading] = React.useState(true);
-  const [coordinates, setCoordinates] = React.useState();
+  const [coordinates, setCoordinates] = React.useState([]);
   const handleName = (value) => {
     localStorage.setItem('userName', value)
     setName(value)
@@ -39,7 +39,7 @@ function DisplayContainer(props) {
   let nameRemembered = ""
 
   const initLocation = () => {
-
+    console.log("Execute ILocation")
     navigator.geolocation.getCurrentPosition(onSuccess, onError)
 
     function onSuccess(position){
@@ -49,28 +49,24 @@ function DisplayContainer(props) {
     function onError(err){
       console.log("No Dice")
     }
-
+    return null;
   }
 
   React.useEffect(() => {
-     nameRemembered = localStorage.getItem('userName') 
+     console.log("Loading Coordinates")
+     initLocation()
   }, [])
 
   React.useEffect(() => {
-
+    console.log("Running Hook")
     // window.alert(`Coords Loaded\nLatitude: ${props.latitude}\nLongitude: ${props.longitude}`)
       const initWeather = async() => {
-        if(props.latitude != null && props.longitude != null){
-              setLoading(true);
-              initLocation();
+        if(props.loadLocation && (coordinates[0] != null && coordinates[1] != null)){
               const weatherCall = await axios.get(`/api/forecast/getForecast?lat=${coordinates[0]}&lon=${coordinates[1]}`,  {baseURL: process.env.NEXT_PUBLIC_BASE_URL}).then((res) => {
-              console.log("New Data Loaded:", res.data)
               const response = res.data.data
               const responseTemp = response.daily[0].temp
-              console.log("Response Temp is", responseTemp)
               const responseCity = res.data.city
-              const responseWeather = response.current.weather[0]
-              console.log(response)
+              const responseWeather = response.current.weather[0]            
               const weatherReference = getWeatherObject(response.current.dt, responseTemp, responseWeather, responseCity);
               setCurrentDay({
                 "Description": weatherReference.weather.main,
@@ -83,14 +79,14 @@ function DisplayContainer(props) {
               })
               console.log("RespObj is", weatherReference)
               setCity(weatherReference.city)
-              setNextSeven(initializeWeatherObjectArray(response.daily.slice(1,8)))
+              setNextSeven(initializeWeatherObjectArray(response.daily.slice(0,7)))
               setLoading(false)
           }).catch((err) => (console.log(Error(err.message))))
       }
         
       }
-      setTimeout(initWeather, 100);
-    }, [props.latitude, props.longitude])
+      setTimeout(initWeather, 50);
+    }, [coordinates])
   
 
   
@@ -109,7 +105,7 @@ function DisplayContainer(props) {
       }
     })
     console.log("CurrentDay:", currentDay)
-    console.log("DailyArray:", (isDailyLoaded ? props.data.daily.slice(1, 8) : []))
+    console.log("DailyArray:", (isDailyLoaded ? props.data.daily.slice(0, 7) : []))
     setNextSeven(initializeWeatherObjectArray(props.data.daily))
     setLoading(false);
     }, [])
