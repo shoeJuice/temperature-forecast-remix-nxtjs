@@ -14,15 +14,11 @@ function DisplayContainer(props) {
 
   const [currentDay, setCurrentDay] = React.useState(null)
   const [nextSeven, setNextSeven] = React.useState()
-  const [city, setCity] = React.useState();
-  const [respObj, setRespObj] = React.useState()
   const [isLoading, setLoading] = React.useState(true);
-  const [coordinates, setCoordinates] = React.useState();
   const [longitude, setLongitude] = React.useState();
   const [latitude, setLatitude] = React.useState();
 
   const [mobileLandscape] = useMediaQuery('screen and (max-height: 420px) and (orientation: landscape)')
-  const [isSurfaceDuo] = useMediaQuery('only screen and (-webkit-min-device-pixel-ratio: 2.5)')
 
   const fadeIn = getFadeFrames()
 
@@ -58,7 +54,7 @@ function DisplayContainer(props) {
               }
               const {ResponseData, Temperature, City, Weather} = responseObject
               setCurrentDay(getWeatherObject(ResponseData.current.dt, Temperature, Weather, City))
-              setNextSeven(initializeWeatherObjectArray(ResponseData.daily.slice(1,8)))
+              setNextSeven(initializeWeatherObjectArray(ResponseData.daily.slice(1, 7)))
           })
           .catch((err) => {
             console.log(Error(err.message))
@@ -66,7 +62,7 @@ function DisplayContainer(props) {
           .finally(setLoading(false))
       }
         setTimeout(initWeather, 1000)
-    }, [(latitude && longitude)])
+    }, [latitude, longitude])
   
   return props.mobileLandscape ? (
   <div className={css`animation: ${fadeIn};

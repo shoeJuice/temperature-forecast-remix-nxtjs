@@ -227,7 +227,6 @@ function unixTimeToHumanReadable(seconds)
 
        //Check if propArray is an array
        if(Array.isArray(propArray)){
-           propArray = propArray.slice(1, 7)
            propArray.map((id, key) => {
                //Instantiate new weatherObject using corresponding dailyObject attributes
                let tempWeatherObject = new weatherObject(id.dt, id.temp, id.weather[0])
