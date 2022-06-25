@@ -2,6 +2,8 @@ import React from 'react'
 import {BsSun, BsMoonFill, BsCloudSnow, BsClouds, BsCloudRain, BsCloudFog, BsCloudLightningRain, BsCloudHaze} from 'react-icons/bs'
 import {RiMistLine} from 'react-icons/ri'
 import {Icon} from '@chakra-ui/react'
+
+
 const AdaptiveIcon = ( props ) => {
    
     const defBoxSize = 65
@@ -24,8 +26,6 @@ const AdaptiveIcon = ( props ) => {
 
     }
     
-    
-
 }
 
 export  {AdaptiveIcon}
