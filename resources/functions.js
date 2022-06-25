@@ -246,5 +246,21 @@ function unixTimeToHumanReadable(seconds)
 
        return new weatherObjectRef.weatherObject(date, temp, weather, city)
    }
+   /**
+    * Once the browser loads, initialise the location of the user.
+    */
+   const initLocation = () => {
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError)
+
+    function onSuccess(position){
+      console.log("Coordinates Loaded")
+      setCoordinates([position.coords.latitude, position.coords.longitude])
+    }
+    function onError(err){
+      console.log("No Dice")
+    }
+
+  }
 
 export {unixTimeToHumanReadable, numberToDay, getFadeFrames, getWeatherObject, initializeWeatherObjectArray, getApproximateLocation}

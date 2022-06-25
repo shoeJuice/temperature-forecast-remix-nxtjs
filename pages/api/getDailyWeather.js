@@ -9,12 +9,12 @@ import publicIp from "public-ip"
  */
 export default async function getDailyWeather(req, res) {
 
-    var myip = await publicIp.v4();
-    const geoip_request = geoip.lookup(myip)
+ //   var myip = await publicIp.v4();
+  //  const geoip_request = geoip.lookup(myip)
 
     
-    const response = await axios.get(`https://pro.openweathermap.org/data/2.5/onecall?lat=${geoip_request.ll[0]}&lon=${geoip_request.ll[1]}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`)
-    const currentCity = await axios.get(`https://pro.openweathermap.org/data/2.5/forecast/daily?lat=${geoip_request.ll[0]}&lon=${geoip_request.ll[1]}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`)
+ //   const response = await axios.get(`https://pro.openweathermap.org/data/2.5/onecall?lat=${geoip_request.ll[0]}&lon=${geoip_request.ll[1]}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`)
+//    const currentCity = await axios.get(`https://pro.openweathermap.org/data/2.5/forecast/daily?lat=${geoip_request.ll[0]}&lon=${geoip_request.ll[1]}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`)
 
     
     res.status(200).send({

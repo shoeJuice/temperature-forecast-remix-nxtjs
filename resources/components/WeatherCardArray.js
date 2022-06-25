@@ -1,5 +1,5 @@
 import React from 'react';
-import {Flex, Box, HStack, Stack, StackDivider, useMediaQuery, Text} from '@chakra-ui/react'
+import {Flex, Box, HStack, Stack, StackDivider, useMediaQuery, Text, Spinner} from '@chakra-ui/react'
 import TestCard from './testCard'
 
 
@@ -20,7 +20,7 @@ const WeatherCardArray = (props) => {
     const [temperature, setTemperature] = React.useState();
     const [weather, setWeather] = React.useState();
     const [fList, setfList] = React.useState([]);
-    const [loading, setLoading] = React.useState(props.isLoading);
+    const [loading, setLoading] = React.useState();
     const [isPhoneDisplay] = useMediaQuery('(max-width: 420px)') 
     const [isSurfaceDuo] = useMediaQuery('only screen and (-webkit-min-device-pixel-ratio: 2.5)')
     const [mobileLandscape] = useMediaQuery('screen and (max-height: 420px) and (orientation: landscape)')
@@ -30,13 +30,13 @@ const WeatherCardArray = (props) => {
        setWeather(weather)
    }
 
-   
+   const borderTop = ['1px solid white', '1px solid white', '1px solid white', '1px solid white']
+   const borderBottom = ['1px solid white', '1px solid white', '1px solid white', '1px solid white']
 
 
 
     const initializeList = () => {
         setfList(props.sourceArray)
-        setLoading(props.isLoading)
     }
 
     React.useEffect(() => {
@@ -52,22 +52,23 @@ const WeatherCardArray = (props) => {
         <Stack
             textAlign='center'
             divider={(isPhoneDisplay || isSurfaceDuo) ? <></> : <></>}
-            borderTop={['1px solid white', '1px solid white', '1px solid white', '1px solid white']}
-            borderBottom={(isPhoneDisplay) ? ['none'] : ['1px solid white', '1px solid white', '1px solid white', '1px solid white']}
-            
+            borderTop={borderTop}
+            borderBottom={(isPhoneDisplay) ? ['none'] : borderBottom}
             direction={(isPhoneDisplay) ? 'column' : ( (props.isLandscapeMode) ? 'row' : {base: 'column', sm:'column', md:'row'})}
         >
-            { (Array.isArray(fList)) ? fList.map((id, key) => ((key == 5) ? (<TestCard key={key} needsDivider={false} temperature={id.tempMax} weather={id.weather.main}  min={id.tempMin} day={id.parseDate()} />) : 
-                    <TestCard key={key} needsDivider={true} temperature={id.tempMax} weather={id.weather.main}  min={id.tempMin} day={id.parseDate()} />
-            )) : 
+            { (Array.isArray(fList)) ? 
+                fList.map(
+                    (id, key) => ((key == 5) ? (<TestCard key={key} needsDivider={false} temperature={id.tempMax} weather={id.weather.main}  min={id.tempMin} day={id.parseDate()} />) : <TestCard key={key} needsDivider={true} temperature={id.tempMax} weather={id.weather.main}  min={id.tempMin} day={id.parseDate()} />)) : 
                 <Text>
                     Loading
                 </Text> }
         </Stack>
         ) :  (
-            <Text>
-                Loading..
-            </Text>
+            <Box
+                textAlign='center'
+            >
+                <Spinner marginX='auto' />
+            </Box>
             );
 };
 

@@ -26,7 +26,7 @@ const GreetingCard = (props) => {
                 fontSize={fSize}
                 fontWeight='medium'
             >Hello</Text>
-            <Text marginBottom={[1, 2, 3, 4]} fontSize={fSizeMinor} fontWeight='thin'>Today is {day} </Text>
+            <Text marginBottom={[1]} fontSize={fSizeMinor} fontWeight='thin'>Today is {day} </Text>
             <Text
                 fontSize={[16, 22, 32, 35]}
             >{props.city}</Text>

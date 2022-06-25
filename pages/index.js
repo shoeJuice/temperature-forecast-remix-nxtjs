@@ -38,24 +38,9 @@ const useMQuery = (qry) => {
 }
 
 
-export const getStaticProps = async() => {
-  const res = await getDailyWeather()
-  const data = res.data
-  const currentCity = res.city
-  console.log("Data:", data)
-  console.log("City:", currentCity)
-  return {
-    props: {
-      data: {
-        current: data.current,
-        city: currentCity,
-        daily: data.daily,
-      }
-    }
-  }
-}
 
-export default function Home({data}) {
+
+export default function Home() {
   const mQuery = useMQuery('screen and (max-height: 420px) and (orientation: landscape)')
   
   
@@ -68,7 +53,7 @@ export default function Home({data}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.functionalContainer}>
-        <DisplayContainer loadLocation mobileLandscape={mQuery} data={data ? data : null} />
+        <DisplayContainer mobileLandscape={mQuery}  />
       </div>
     </div>
   )
