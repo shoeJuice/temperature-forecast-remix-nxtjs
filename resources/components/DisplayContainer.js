@@ -10,8 +10,6 @@ import WeatherCardArray from './WeatherCardArray'
 import {unixTimeToHumanReadable, getFadeFrames, numberToDay, getWeatherObject, initializeWeatherObjectArray} from '../../resources/functions'
 
 
-
-
 function DisplayContainer(props) {
 
   const [currentDay, setCurrentDay] = React.useState(null)
@@ -29,7 +27,6 @@ function DisplayContainer(props) {
   const fadeIn = getFadeFrames()
 
   const initLocation = async() => {
-
     navigator.geolocation.getCurrentPosition(onSuccess, onError)
 
     function onSuccess(position){
@@ -37,26 +34,22 @@ function DisplayContainer(props) {
       setLongitude(position.coords.longitude)
       setLatitude(position.coords.latitude)
     }
+
     function onError(err){
       console.log("No Dice")
     }
+
     return null;
   }
-
-  React.useEffect(() => {
-
-  }, [isLoading])
 
   React.useEffect(() => {
     initLocation()
   }, [])
 
-
   React.useEffect(() => {
     // window.alert(`Coords Loaded\nLatitude: ${props.latitude}\nLongitude: ${props.longitude}`)
       const initWeather = async() => {
               const weatherCall = await axios.get(`/api/forecast/getForecast?lat=${latitude}&lon=${longitude}`,  {baseURL: process.env.NEXT_PUBLIC_BASE_URL}).then((res) => {
-              console.log("New Data Loaded:", res.data)
               const responseObject = {
                 ResponseData: res.data.data,
                 Temperature: res.data.data.daily[0].temp,
@@ -72,10 +65,8 @@ function DisplayContainer(props) {
           })
           .finally(setLoading(false))
       }
-        setTimeout(initWeather, 2000)
+        setTimeout(initWeather, 1000)
     }, [(latitude && longitude)])
-  
-
   
   return props.mobileLandscape ? (
   <div className={css`animation: ${fadeIn};
@@ -98,7 +89,11 @@ function DisplayContainer(props) {
       >
         <Box>
           <GreetingCard city={currentDay ? currentDay.city : "Loading..."}/>
-          <WeatherCard weatherDesc={((currentDay != null) ? currentDay.weather.main : "Loading")} tempMax={(currentDay != null ? currentDay.tempMax : "NaN")} tempCurrent={(currentDay != null ? currentDay.tempMid : "NaN")} tempMin={(currentDay != null? currentDay.tempMin : "NaN")} />
+          <WeatherCard 
+          weatherDesc={((currentDay != null) ? currentDay.weather.main : "Loading")} 
+          tempMax={(currentDay != null ? currentDay.tempMax : "NaN")} 
+          tempCurrent={(currentDay != null ? currentDay.tempMid : "NaN")} 
+          tempMin={(currentDay != null? currentDay.tempMin : "NaN")} />
         </Box>
         <Box marginTop='12ex'>
           <WeatherCardArray  sourceArray={nextSeven} isLandscapeMode={mobileLandscape} />
@@ -124,12 +119,18 @@ function DisplayContainer(props) {
           > 
             <Box>
               <GreetingCard city={currentDay ? currentDay.city : "Loading..."} />
-              <WeatherCard loading={!currentDay} weatherDesc={((currentDay != null) ? currentDay.weather.main : "Loading")} tempMax={(currentDay != null ? currentDay.tempMax : "NaN")} tempCurrent={(currentDay != null ? currentDay.tempMid : "NaN")} tempMin={(currentDay != null? currentDay.tempMin : "NaN")} />
+              <WeatherCard 
+                loading={!currentDay} 
+                weatherDesc={((currentDay != null) ? currentDay.weather.main : "Loading")} 
+                tempMax={(currentDay != null ? currentDay.tempMax : "NaN")} 
+                tempCurrent={(currentDay != null ? currentDay.tempMid : "NaN")} 
+                tempMin={(currentDay != null? currentDay.tempMin : "NaN")} />
               <WeatherCardArray isLoading={!nextSeven} sourceArray={nextSeven} />
             </Box> 
           </Flex>
         }
     </div>) : <Spinner size='xl' color='whiteAlpha.900' />;
+
 }
 
 export default DisplayContainer;
