@@ -20,14 +20,14 @@ const WeatherCard = (props) => {
                     {`${props.weatherDesc}`}
                 </Text>
                 <Text fontWeight={10}  >
-                        {`${props.tempCurrent}°F`}
+                        {`${props.tempCurrent}°${props.isImperial ? 'F' : 'C'}`}
                 </Text>
                 <HStack>
                     <Text fontWeight={10}  >
-                        {`High: ${props.tempMax}°F`}
+                        {`High: ${props.tempMax}°${props.isImperial ? 'F' : 'C'}`}
                     </Text>
                     <Text color='#F7FAFC' fontWeight={10} >
-                        {`Low: ${props.tempMin}°F`}
+                        {`Low: ${props.tempMin}°${props.isImperial ? 'F' : 'C'}`}
                     </Text>
                 </HStack>
             </Flex>

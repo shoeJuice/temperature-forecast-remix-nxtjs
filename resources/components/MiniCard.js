@@ -56,10 +56,10 @@ const MiniCard = (props) => {
             paddingLeft={(isPhoneDisplay || isSurfaceDuo) ? '0ex' : '0px'}
             >
                 <Text  fontSize={['16px']}>
-                    {`${props.temperature}°F`}
+                    {`${props.temperature}°${props.isImperial ? 'F' : 'C'}`}
                 </Text>
                 <Text color='whiteAlpha.700' fontSize={['16px']}>
-                    {`${props.min}°F`}
+                    {`${props.min}°${props.isImperial ? 'F' : 'C'}`}
                 </Text>
             </Box>
         </Flex>

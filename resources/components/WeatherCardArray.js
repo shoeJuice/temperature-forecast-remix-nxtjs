@@ -35,7 +35,8 @@ const WeatherCardArray = (props) => {
     >
         { (Array.isArray(fList)) ? 
             fList.map((id, key) => ((key == 5) ?
-                    <MiniCard 
+                    <MiniCard
+                        isImperial={props.isImperial} 
                         key={key} 
                         needsDivider={false} 
                         temperature={id.tempMax} 
@@ -43,7 +44,8 @@ const WeatherCardArray = (props) => {
                         min={id.tempMin} 
                         day={id.parseDate()} />
                     : 
-                    <MiniCard 
+                    <MiniCard
+                        isImperial={props.isImperial}  
                         key={key} 
                         needsDivider={true} 
                         temperature={id.tempMax} 
