@@ -89,10 +89,11 @@ function DisplayContainer(props) {
   React.useEffect(() => {
     // window.alert(`Coords Loaded\nLatitude: ${props.latitude}\nLongitude: ${props.longitude}`)
         initWeather.current()
-        setTimeout(initWeather.current, 1000)
+        setTimeout(initWeather.current, 1250)
     }, [latitude, longitude, isImperial])
   
   return props.mobileLandscape ? (
+    currentDay ? 
   <div className={css`animation: ${fadeIn};
   animation-duration: 3s;
   animation-timing-function: linear;`}>
@@ -135,7 +136,7 @@ function DisplayContainer(props) {
         </Box>
       </Flex>
     </Flex>
-  </div>) : currentDay ? (<div className={css`animation: ${fadeIn};
+  </div> : <Spinner size='xl' color='whiteAlpha.900' />) : currentDay ? (<div className={css`animation: ${fadeIn};
       animation-duration: 3s;
       animation-timing-function: linear;`}>
         {
