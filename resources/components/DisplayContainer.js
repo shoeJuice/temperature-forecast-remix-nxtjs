@@ -1,6 +1,6 @@
 import axios from 'axios'
-import React, {Suspense} from 'react';
-import {Flex, Grid, Box, Text, useMediaQuery, Spinner} from '@chakra-ui/react'
+import React, {Suspense, useRef} from 'react';
+import {Flex, Grid, Box, Text, useMediaQuery, Spinner, Button, HStack, Switch} from '@chakra-ui/react'
 import {css, keyframes} from '@emotion/css'
 
 import GreetingCard from './GreetingCard'
@@ -17,8 +17,52 @@ function DisplayContainer(props) {
   const [isLoading, setLoading] = React.useState(true);
   const [longitude, setLongitude] = React.useState();
   const [latitude, setLatitude] = React.useState();
+  const [isImperial, setIsImperial] = React.useState(false);
 
   const [mobileLandscape] = useMediaQuery('screen and (max-height: 420px) and (orientation: landscape)')
+  const initWeather = useRef(() => {})
+
+  initWeather.current = async() => {
+      if(isImperial){
+        const weatherCall = await axios.get(`/api/forecast/getForecast?lat=${latitude}&lon=${longitude}`,  {baseURL: process.env.NEXT_PUBLIC_BASE_URL}).then(({data: {data: {fahrenheit}, city}}) => {
+        console.log("Data", fahrenheit)
+        console.log("City: ", city)
+        const responseObject = {
+        ResponseData: fahrenheit,
+        Temperature: fahrenheit.daily[0].temp,
+        City: city,
+        Weather: fahrenheit.current.weather[0]
+      }
+      const {ResponseData, Temperature, City, Weather} = responseObject
+      setCurrentDay(getWeatherObject(ResponseData.current.dt, Temperature, Weather, City))
+      setNextSeven(initializeWeatherObjectArray(ResponseData.daily.slice(1, 7)))
+      })
+      .catch((err) => {
+        console.log(Error(err.message))
+      })
+      .finally(setLoading(false))
+    }
+    else{
+      const weatherCall = await axios.get(`/api/forecast/getForecast?lat=${latitude}&lon=${longitude}`,  {baseURL: process.env.NEXT_PUBLIC_BASE_URL})
+      .then(({data: {data: {celsius}, city}}) => {
+      console.log("Data", celsius)
+      console.log("City: ", city)
+      const responseObject = {
+        ResponseData: celsius,
+        Temperature: celsius.daily[0].temp,
+        City: city,
+        Weather: celsius.current.weather[0]
+      }
+      const {ResponseData, Temperature, City, Weather} = responseObject
+      setCurrentDay(getWeatherObject(ResponseData.current.dt, Temperature, Weather, City))
+      setNextSeven(initializeWeatherObjectArray(ResponseData.daily.slice(1, 7)))
+    })
+    .catch((err) => {
+      console.log(Error(err.message))
+    })
+    .finally(setLoading(false))
+    }
+  }
 
   const fadeIn = getFadeFrames()
 
@@ -44,25 +88,9 @@ function DisplayContainer(props) {
 
   React.useEffect(() => {
     // window.alert(`Coords Loaded\nLatitude: ${props.latitude}\nLongitude: ${props.longitude}`)
-      const initWeather = async() => {
-              const weatherCall = await axios.get(`/api/forecast/getForecast?lat=${latitude}&lon=${longitude}`,  {baseURL: process.env.NEXT_PUBLIC_BASE_URL}).then((res) => {
-              const responseObject = {
-                ResponseData: res.data.data,
-                Temperature: res.data.data.daily[0].temp,
-                City: res.data.city,
-                Weather: res.data.data.current.weather[0]
-              }
-              const {ResponseData, Temperature, City, Weather} = responseObject
-              setCurrentDay(getWeatherObject(ResponseData.current.dt, Temperature, Weather, City))
-              setNextSeven(initializeWeatherObjectArray(ResponseData.daily.slice(1, 7)))
-          })
-          .catch((err) => {
-            console.log(Error(err.message))
-          })
-          .finally(setLoading(false))
-      }
-        setTimeout(initWeather, 1000)
-    }, [latitude, longitude])
+        initWeather.current()
+        setTimeout(initWeather.current, 1000)
+    }, [latitude, longitude, isImperial])
   
   return props.mobileLandscape ? (
   <div className={css`animation: ${fadeIn};
@@ -113,15 +141,25 @@ function DisplayContainer(props) {
             alignItems='center'
             justifyContent='center'
           > 
+            <HStack
+              alignSelf='flex-end'
+            >
+              <Text fontSize='small'>Metric</Text>
+              <Switch size='sm' isChecked={isImperial} onChange={() => {
+                setCurrentDay(null)
+                setIsImperial(!isImperial)}} />
+              <Text fontSize='small'>Imperial</Text>
+            </HStack>
             <Box>
               <GreetingCard city={currentDay ? currentDay.city : "Loading..."} />
               <WeatherCard 
+                isImperial={isImperial}
                 loading={!currentDay} 
                 weatherDesc={((currentDay != null) ? currentDay.weather.main : "Loading")} 
                 tempMax={(currentDay != null ? currentDay.tempMax : "NaN")} 
                 tempCurrent={(currentDay != null ? currentDay.tempMid : "NaN")} 
                 tempMin={(currentDay != null? currentDay.tempMin : "NaN")} />
-              <WeatherCardArray isLoading={!nextSeven} sourceArray={nextSeven} />
+              <WeatherCardArray isImperial={isImperial} isLoading={!nextSeven} sourceArray={nextSeven} />
             </Box> 
           </Flex>
         }
