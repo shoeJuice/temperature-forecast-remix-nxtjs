@@ -6,7 +6,6 @@ import React, {useState, useCallback} from 'react'
 import { useMediaQuery } from '@chakra-ui/react'
 
 import axios from 'axios'
-import getDailyWeather from './api/forecast/getDailyWeather'
 import DisplayContainer from '../resources/components/DisplayContainer'
 
 

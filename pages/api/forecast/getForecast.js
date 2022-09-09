@@ -1,23 +1,41 @@
-
-import axios from 'axios'
+import axios from "axios";
 
 export default async function handler(req, res) {
+  //Record query parameters
+  const params = req.query;
 
-    //Record query parameters
-    const params = req.query
-    
-    const responseObject = {data: {
+  const responseObject = {
+    data: {
       fahrenheit: {},
-      celsius: {}
-    }, city: null}
-    
-    const responseF = await axios.get(`https://pro.openweathermap.org/data/2.5/onecall?lat=${params.lat}&lon=${params.lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`).then(({data}) => {responseObject.data.fahrenheit=data})
-    const responseC = await axios.get(`https://pro.openweathermap.org/data/2.5/onecall?lat=${params.lat}&lon=${params.lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=metric`).then(({data}) => {responseObject.data.celsius=data})
-    const currentCity = await axios.get(`https://pro.openweathermap.org/data/2.5/forecast/daily?lat=${params.lat}&lon=${params.lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`).then((res) => {responseObject.city=res.data.city.name})
+      celsius: {},
+    },
+    city: null,
+  };
 
-    
-    
-    return(res.status(200).send(responseObject)) 
+  const responseF = await axios
+    .get(
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${params.lat}&lon=${params.lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`
+    )
+    .then(({ data }) => {
+      responseObject.data.fahrenheit = data;
+    });
+  const responseC = await axios
+    .get(
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${params.lat}&lon=${params.lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=metric`
+    )
+    .then(({ data }) => {
+      responseObject.data.celsius = data;
+    });
+  const currentCity = await axios
+    .get(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${params.lat}&lon=${params.lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=imperial`
+    )
+    .then(({data}) => {
+      console.log(data);
+      responseObject.city = data.city.name;
+    });
 
-    res.status(404).send("INTERNAL SERVER ERROR 404")
-  }
+  return res.status(200).send(responseObject);
+
+  res.status(404).send("INTERNAL SERVER ERROR 404");
+}
